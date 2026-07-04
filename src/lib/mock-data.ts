@@ -1,0 +1,293 @@
+import { format, addDays, subDays } from "date-fns";
+import type {
+  Category,
+  Task,
+  Template,
+  ReminderHistory,
+  AppSettings,
+} from "./types";
+
+const today = format(new Date(), "yyyy-MM-dd");
+const yesterday = format(subDays(new Date(), 1), "yyyy-MM-dd");
+const tomorrow = format(addDays(new Date(), 1), "yyyy-MM-dd");
+const in2days = format(addDays(new Date(), 2), "yyyy-MM-dd");
+const in3days = format(addDays(new Date(), 3), "yyyy-MM-dd");
+const in5days = format(addDays(new Date(), 5), "yyyy-MM-dd");
+const lastWeek = format(subDays(new Date(), 7), "yyyy-MM-dd");
+
+export const DEFAULT_CATEGORIES: Category[] = [
+  {
+    id: "cat-1",
+    name: "Trabalho",
+    color: "#3b82f6",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "cat-2",
+    name: "Estudos",
+    color: "#8b5cf6",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "cat-3",
+    name: "Compras",
+    color: "#f59e0b",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "cat-4",
+    name: "Saude",
+    color: "#10b981",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "cat-5",
+    name: "Financeiro",
+    color: "#06b6d4",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "cat-6",
+    name: "Pessoal",
+    color: "#ec4899",
+    createdAt: new Date().toISOString(),
+  },
+];
+
+export const DEFAULT_TEMPLATES: Template[] = [
+  {
+    id: "tpl-1",
+    name: "Lembrete de Reuniao",
+    title: "Reuniao: {{titulo}}",
+    content:
+      "Voce tem uma reuniao agendada.\n\nData: {{data}}\nHorario: {{hora}}\nPrioridade: {{prioridade}}\n\nDetalhes:\n{{descricao}}",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "tpl-2",
+    name: "Lista de Compras",
+    title: "Compras - {{data}}",
+    content: "Itens para comprar:\n\n{{itens}}\n\nObservacoes: {{descricao}}",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "tpl-3",
+    name: "Tarefa Urgente",
+    title: "🚨 URGENTE: {{titulo}}",
+    content:
+      "Esta tarefa requer atencao imediata!\n\nTarefa: {{titulo}}\nPrazo: {{data}} as {{hora}}\nPrioridade: {{prioridade}}\n\nDescricao: {{descricao}}",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+export const DEFAULT_TASKS: Task[] = [
+  {
+    id: "task-1",
+    title: "Apresentacao do projeto Q3",
+    description:
+      "Preparar slides e dados de performance do terceiro trimestre para a diretoria",
+    date: today,
+    time: "14:00",
+    priority: "alta",
+    categoryId: "cat-1",
+    status: "em_andamento",
+    notes: "Incluir graficos de crescimento e projecoes",
+    reminder: true,
+    templateId: "tpl-1",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-2",
+    title: "Revisao do modulo de TypeScript",
+    description:
+      "Completar os exercicios do modulo avancado de TypeScript no curso online",
+    date: today,
+    time: "19:00",
+    priority: "media",
+    categoryId: "cat-2",
+    status: "pendente",
+    notes: "",
+    reminder: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-3",
+    title: "Compras do supermercado",
+    description: "Frutas, legumes, proteinas e itens de limpeza para a semana",
+    date: tomorrow,
+    time: "10:00",
+    priority: "baixa",
+    categoryId: "cat-3",
+    status: "pendente",
+    notes: "Verificar promocoes na app do mercado",
+    reminder: false,
+    templateId: "tpl-2",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-4",
+    title: "Consulta medica anual",
+    description: "Check-up completo com exames de rotina",
+    date: in2days,
+    time: "09:30",
+    priority: "alta",
+    categoryId: "cat-4",
+    status: "pendente",
+    notes: "Levar exames anteriores e carteirinha do plano",
+    reminder: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-5",
+    title: "Pagamento do IPTU",
+    description: "Vencimento da parcela mensal do IPTU 2024",
+    date: yesterday,
+    time: "23:59",
+    priority: "urgente",
+    categoryId: "cat-5",
+    status: "atrasada",
+    notes: "Verificar multa por atraso",
+    reminder: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-6",
+    title: "Ligar para a Mae",
+    description: "Marcar visita para o fim de semana",
+    date: today,
+    time: "20:00",
+    priority: "media",
+    categoryId: "cat-6",
+    status: "concluida",
+    notes: "",
+    reminder: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-7",
+    title: "Code review do PR #142",
+    description:
+      "Revisar pull request do time de backend com nova feature de autenticacao",
+    date: in3days,
+    time: "11:00",
+    priority: "alta",
+    categoryId: "cat-1",
+    status: "pendente",
+    notes: "Focar na seguranca e performance",
+    reminder: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-8",
+    title: "Renovacao do seguro do carro",
+    description:
+      "Pesquisar melhores cotacoes e renovar o seguro antes do vencimento",
+    date: lastWeek,
+    time: "18:00",
+    priority: "urgente",
+    categoryId: "cat-5",
+    status: "atrasada",
+    notes: "Comparar pelo menos 3 seguradoras",
+    reminder: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-9",
+    title: "Academia - treino de forca",
+    description: "Treino A: peito, triceps e ombro",
+    date: today,
+    time: "07:00",
+    priority: "media",
+    categoryId: "cat-4",
+    status: "concluida",
+    notes: "",
+    reminder: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "task-10",
+    title: "Estudo de React Server Components",
+    description:
+      "Aprofundar conhecimento em RSC e Server Actions do Next.js 14+",
+    date: in5days,
+    time: "20:00",
+    priority: "media",
+    categoryId: "cat-2",
+    status: "pendente",
+    notes: "Fazer projeto pratico apos estudo",
+    reminder: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+export const DEFAULT_REMINDER_HISTORY: ReminderHistory[] = [
+  {
+    id: "rem-1",
+    taskId: "task-1",
+    taskTitle: "Apresentacao do projeto Q3",
+    templateId: "tpl-1",
+    templateName: "Lembrete de Reuniao",
+    date: today,
+    time: "13:00",
+    status: "agendado",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "rem-2",
+    taskId: "task-5",
+    taskTitle: "Pagamento do IPTU",
+    date: yesterday,
+    time: "08:00",
+    status: "enviado",
+    sentAt: new Date(Date.now() - 86400000).toISOString(),
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    id: "rem-3",
+    taskId: "task-8",
+    taskTitle: "Renovacao do seguro do carro",
+    date: lastWeek,
+    time: "09:00",
+    status: "enviado",
+    sentAt: new Date(Date.now() - 7 * 86400000).toISOString(),
+    createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
+  },
+  {
+    id: "rem-4",
+    taskId: "task-4",
+    taskTitle: "Consulta medica anual",
+    date: in2days,
+    time: "08:30",
+    status: "agendado",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "rem-5",
+    taskId: "task-7",
+    taskTitle: "Code review do PR #142",
+    date: in3days,
+    time: "10:00",
+    status: "agendado",
+    createdAt: new Date().toISOString(),
+  },
+];
+
+export const DEFAULT_SETTINGS: AppSettings = {
+  theme: "system",
+  defaultPriority: "media",
+  defaultCategoryId: "cat-1",
+  defaultStatus: "pendente",
+};
