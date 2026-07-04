@@ -18,7 +18,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/tarefas": "Tarefas",
   "/categorias": "Categorias",
   "/templates": "Templates",
-  "/configuracoes": "Configuracoes",
+  "/configuracoes": "Configuracões",
 };
 
 export function Header() {

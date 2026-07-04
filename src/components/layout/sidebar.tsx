@@ -27,7 +27,7 @@ const NAV_ITEMS = [
   { href: "/tarefas", icon: CheckSquare, label: "Tarefas" },
   { href: "/categorias", icon: Tag, label: "Categorias" },
   { href: "/templates", icon: FileText, label: "Templates" },
-  { href: "/configuracoes", icon: Settings, label: "Configuracoes" },
+  { href: "/configuracoes", icon: Settings, label: "Configuracões" },
 ];
 
 const BOTTOM_NAV_ITEMS = [
