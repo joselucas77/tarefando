@@ -25,10 +25,8 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -40,8 +38,8 @@ import {
   Tag,
   Search,
   X,
-  SlidersHorizontal,
   ListFilter,
+  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Category } from "@/lib/types";
@@ -187,124 +185,6 @@ function CategoryForm({ category, onSubmit, onCancel }: CategoryFormProps) {
   );
 }
 
-function CategoryFiltersPanel({
-  filters,
-  onChange,
-}: {
-  filters: CategoryFilters;
-  onChange: (f: CategoryFilters) => void;
-}) {
-  const hasActive =
-    filters.sort !== DEFAULT_FILTERS.sort ||
-    filters.status !== DEFAULT_FILTERS.status ||
-    filters.tasks !== DEFAULT_FILTERS.tasks;
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button
-          variant="outline"
-          size="sm"
-          className={cn(
-            "gap-2 h-9 border-border/60",
-            hasActive && "border-primary/50 text-primary bg-primary/5",
-          )}
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-          <span className="hidden sm:inline">Filtros</span>
-          {hasActive && (
-            <Badge className="h-4 w-4 p-0 flex items-center justify-center text-[10px] rounded-full">
-              •
-            </Badge>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-52">
-        <DropdownMenuLabel className="flex items-center gap-2 text-xs">
-          <ListFilter className="w-3.5 h-3.5" />
-          Filtros
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-xs text-muted-foreground font-normal px-2 py-1">
-            Ordenacao
-          </DropdownMenuLabel>
-          <DropdownMenuRadioGroup
-            value={filters.sort}
-            onValueChange={(v) =>
-              onChange({ ...filters, sort: v as SortOption })
-            }
-          >
-            <DropdownMenuRadioItem value="az">A-Z</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="za">Z-A</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="newest">
-              Mais recentes
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="oldest">
-              Mais antigas
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-xs text-muted-foreground font-normal px-2 py-1">
-            Status
-          </DropdownMenuLabel>
-          <DropdownMenuRadioGroup
-            value={filters.status}
-            onValueChange={(v) =>
-              onChange({ ...filters, status: v as StatusFilter })
-            }
-          >
-            <DropdownMenuRadioItem value="all">Todas</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="active">Ativas</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="inactive">
-              Inativas
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-xs text-muted-foreground font-normal px-2 py-1">
-            Tarefas vinculadas
-          </DropdownMenuLabel>
-          <DropdownMenuRadioGroup
-            value={filters.tasks}
-            onValueChange={(v) =>
-              onChange({ ...filters, tasks: v as TasksFilter })
-            }
-          >
-            <DropdownMenuRadioItem value="all">Todas</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="with-tasks">
-              Com tarefas
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="without-tasks">
-              Sem tarefas
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
-
-        {hasActive && (
-          <>
-            <DropdownMenuSeparator />
-            <button
-              className="w-full text-xs text-muted-foreground hover:text-foreground px-2 py-1.5 text-left transition-colors"
-              onClick={() => onChange(DEFAULT_FILTERS)}
-            >
-              Limpar filtros
-            </button>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
 export default function CategoriasPage() {
   const { categories, addCategory, updateCategory, deleteCategory } =
     useCategories();
@@ -388,7 +268,7 @@ export default function CategoriasPage() {
     catFilters.tasks !== DEFAULT_FILTERS.tasks;
 
   return (
-    <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto">
+    <div className="p-4 md:p-6 space-y-4 max-w-6xl mx-auto">
       {/* Page header — consistent pattern */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -410,7 +290,6 @@ export default function CategoriasPage() {
               </button>
             )}
           </div>
-          <CategoryFiltersPanel filters={catFilters} onChange={setCatFilters} />
         </div>
         <Button
           onClick={() => {

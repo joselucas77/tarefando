@@ -204,7 +204,7 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-0 px-4 pb-4">
-            {!isLoaded ? (
+            {!isLoaded || !todayDateKey ? (
               <div className="space-y-2">
                 {[0, 1, 2].map((i) => (
                   <Skeleton key={i} className="h-12 w-full rounded-lg" />
@@ -267,7 +267,7 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-0 px-4 pb-4">
-            {!isLoaded ? (
+            {!isLoaded || !todayDateKey ? (
               <div className="space-y-2">
                 {[0, 1, 2].map((i) => (
                   <Skeleton key={i} className="h-12 w-full rounded-lg" />

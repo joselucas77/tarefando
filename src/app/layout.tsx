@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
-import { Header } from "@/components/layout/header";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -47,13 +46,13 @@ export default function RootLayout({
           <div className="flex h-screen overflow-hidden">
             <Sidebar />
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-              <Header />
+              {/* <Header /> */}
               <main className="flex-1 overflow-y-auto pb-16 md:pb-0">
                 {children}
               </main>
             </div>
           </div>
-          <Toaster richColors position="bottom-right" />
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>

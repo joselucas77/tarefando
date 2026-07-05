@@ -196,7 +196,7 @@ export default function TarefasPage() {
     filters.dateRange !== "all";
 
   return (
-    <div className="p-4 md:p-6 space-y-4 max-w-5xl mx-auto">
+    <div className="p-4 md:p-6 space-y-4 max-w-6xl mx-auto">
       {/* Page header — consistent pattern */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">

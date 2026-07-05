@@ -249,7 +249,7 @@ export default function TemplatesPage() {
   }
 
   return (
-    <div className="p-6 space-y-5 max-w-4xl mx-auto">
+    <div className="p-6 space-y-5 max-w-6xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">Templates</h2>

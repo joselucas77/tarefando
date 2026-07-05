@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSettings, useCategories, useTemplates } from "@/hooks/use-app-data";
 import { useTasks } from "@/hooks/use-tasks";
 import { useLocalStorage } from "@/hooks/use-local-storage";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,14 +15,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
@@ -52,7 +45,6 @@ import {
   Settings2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "@/lib/task-utils";
 import type { Theme } from "@/lib/types";
 import { useTheme } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
@@ -92,6 +84,8 @@ export default function configuracoesPage() {
   const { templates } = useTemplates();
   const { tasks, getStats } = useTasks();
   const { theme, setTheme } = useTheme();
+
+  const router = useRouter();
 
   const { value: telegramConfig, setValue: setTelegramConfig } =
     useLocalStorage<TelegramConfig>("taskflow:telegram", {
@@ -151,7 +145,13 @@ export default function configuracoesPage() {
     keysToRemove.forEach((key) => localStorage.removeItem(key));
     setClearDataOpen(false);
     toast.success("Dados limpos. Recarregue a pagina para ver as mudancas.", {
-      action: { label: "Recarregar", onClick: () => window.location.reload() },
+      action: {
+        label: "Recarregar",
+        onClick: () => {
+          router.refresh();
+          window.location.reload();
+        },
+      },
     });
   }
 
@@ -168,7 +168,7 @@ export default function configuracoesPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-5 max-w-2xl mx-auto">
+    <div className="p-4 md:p-6 space-y-5 max-w-6xl mx-auto">
       {/* Appearance */}
       <Card className="cyber-card border-0">
         <CardHeader className="pb-3">
@@ -214,91 +214,6 @@ export default function configuracoesPage() {
                 </span>
               </button>
             ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Defaults */}
-      <Card className="cyber-card border-0">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold flex items-center gap-2">
-            <ListTodo className="w-4 h-4 text-primary" />
-            padrão para novas tarefas
-          </CardTitle>
-          <CardDescription className="text-xs">
-            Valores pre-preenchidos ao criar uma nova tarefa
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label className="text-xs">Prioridade padrão</Label>
-              <Select
-                value={settings.defaultPriority}
-                onValueChange={(v) =>
-                  updateSettings({
-                    defaultPriority: v as typeof settings.defaultPriority,
-                  })
-                }
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PRIORITY_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Status padrão</Label>
-              <Select
-                value={settings.defaultStatus}
-                onValueChange={(v) =>
-                  updateSettings({
-                    defaultStatus: v as typeof settings.defaultStatus,
-                  })
-                }
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUS_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs">Categoria padrão</Label>
-            <Select
-              value={settings.defaultCategoryId}
-              onValueChange={(v) => updateSettings({ defaultCategoryId: v })}
-            >
-              <SelectTrigger className="h-9">
-                <SelectValue placeholder="Selecionar categoria..." />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    <span className="flex items-center gap-2">
-                      <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{ backgroundColor: c.color }}
-                      />
-                      {c.name}
-                    </span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
