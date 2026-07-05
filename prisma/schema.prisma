@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  tasks       Task[]
+  appSettings AppSettings[]
+}
+
+model Template {
+  id        String   @id @default(cuid())
+  name      String
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  tasks             Task[]
+  reminderHistories ReminderHistory[]
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  date        String // Mantido como String (YYYY-MM-DD) conforme seu frontend
+  time        String // Mantido como String (HH:MM)
+  priority    String // 'baixa' | 'media' | 'alta' | 'urgente'
+  status      String // 'pendente' | 'em_andamento' | 'concluida' | 'atrasada'
+  notes       String
+  reminder    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relacionamentos: Se a categoria for apagada, a tarefa não é excluída
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Relacionamentos: Se o template for apagado, o registro continua existindo
+  templateId String?
+  template   Template? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  reminderHistories ReminderHistory[]
+}
+
+model ReminderHistory {
+  id           String    @id @default(cuid())
+  taskTitle    String
+  templateName String?
+  date         String
+  time         String
+  status       String // 'agendado' | 'enviado' | 'cancelado'
+  sentAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  // Relacionamentos
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  templateId String?
+  template   Template? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+}
+
+model AppSettings {
+  id              String   @id @default(cuid())
+  theme           String   @default("system")
+  defaultPriority String   @default("media")
+  defaultStatus   String   @default("pendente")
+  updatedAt       DateTime @updatedAt
+
+  // Relacionamento com a Categoria
+  defaultCategoryId String?
+  defaultCategory   Category? @relation(fields: [defaultCategoryId], references: [id], onDelete: SetNull)
+}
